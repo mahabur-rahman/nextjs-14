@@ -1,21 +1,21 @@
-interface Params {
-    productId: string;
-    reviewId: string;
-}
 
-interface ReviewDetailsProps {
-    params: Params;
-}
-
-export default function ReviewDetails({ params }: ReviewDetailsProps) {
-    const { productId, reviewId } = params; 
+import { notFound } from "next/navigation";
 
 
-    return (
-        <div>
-            <h2>Review Details</h2>
-            <p>Product ID: {productId}</p>
-            <p>Review ID: {reviewId}</p>
-        </div>
-    );
+export default function ProductDetail({
+  params,
+}: {
+  params: { productId: string; reviewId: string };
+}) {
+
+
+  if (parseInt(params.reviewId) > 1000) {
+    notFound();
+  }
+  
+  return (
+    <h1>
+      Review {params.reviewId} for product {params.productId}
+    </h1>
+  );
 }
