@@ -17,7 +17,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        <header className="bg-red-300 p-5">
+          <h2>Header</h2>
+        </header>
         {children}
+        <footer className="bg-blue-300 p-5 text-center">
+          <p>Footer</p>
+        </footer>
       </body>
     </html>
   );
