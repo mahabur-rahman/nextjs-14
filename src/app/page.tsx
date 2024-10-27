@@ -1,12 +1,8 @@
-
-
 export default function Home() {
-
-  console.log('hello')
+  console.log("hello");
   return (
     <>
-  
-      <h2>Hello Next.js</h2>
+      <h2>Home page</h2>
     </>
   );
 }
