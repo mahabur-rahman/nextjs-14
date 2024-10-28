@@ -6,6 +6,9 @@ export default function Home() {
       <h2>Home page</h2>
 
       <Link href="/products" className="bg-black text-white">Products</Link>
+      <code>
+        dsfdss
+      </code>
     </>
   );
 }
