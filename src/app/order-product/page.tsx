@@ -7,7 +7,7 @@ export default function OrderProduct() {
 
   const handleClick = () => {
     console.log("Placing your order");
-    router.push("/blog");
+    router.push("/");
   };
 
 
