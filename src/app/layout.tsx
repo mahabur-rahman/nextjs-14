@@ -20,7 +20,9 @@ export default function RootLayout({
         <header className="bg-red-300 p-5">
           <h2>Header</h2>
         </header>
-        {children}
+  <div className="p-16">
+  {children}
+  </div>
         <footer className="bg-blue-300 p-5 text-center">
           <p>Footer</p>
         </footer>
