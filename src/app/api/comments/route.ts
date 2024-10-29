@@ -1,14 +1,16 @@
+import { NextRequest } from "next/server";
 import { comments } from "./data";
 
-export async function GET() {
-  return new Response(JSON.stringify(comments), {
-    status: 200,
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-}
+export async function GET(request: NextRequest) {
+    const searchParams = request.nextUrl.searchParams;
+    const query = searchParams.get("query");
+    const filteredComments = query
+      ? comments.filter((comment) => comment.text.includes(query))
+      : comments;
+    return Response.json(filteredComments);
+  }
 
+// post method 
 export async function POST(request: Request) {
   const comment = await request.json();
 
@@ -22,3 +24,6 @@ export async function POST(request: Request) {
     status: 201,
   });
 }
+
+
+
