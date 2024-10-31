@@ -8,7 +8,7 @@ interface UserDetailsProps {
 }
 
 export default async function UserDetails({ params }: UserDetailsProps) {
-  const res = await fetch(`https://jsonplaceholder.typicode.com/users/${params.id}`);
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${params.id}`);
   const user: User = await res.json();
 
   return (

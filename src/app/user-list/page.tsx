@@ -2,7 +2,7 @@ import { User } from "@/interface/interface";
 import Link from "next/link";
 
 export default async function UserList() {
-  const res = await fetch("https://jsonplaceholder.typicode.com/users");
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users`);
   const users: User[] = await res.json();
 
   return (
