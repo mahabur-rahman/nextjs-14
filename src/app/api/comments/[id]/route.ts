@@ -1,4 +1,18 @@
 import { comments } from "../data";
+import { redirect } from "next/navigation";
+
+// get single comment
+export async function GET(
+    _request: Request,
+    { params }: { params: { id: string } }
+  ) {
+    const comment = comments.find((comment) => comment.id === parseInt(params.id));
+    if (!comment) {
+     redirect('/api/comments')
+    }
+    return Response.json(comment);
+  }
+
 
 // updated 
 export async function PATCH(
