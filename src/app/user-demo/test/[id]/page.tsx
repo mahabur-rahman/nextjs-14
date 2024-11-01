@@ -11,9 +11,7 @@ interface User {
   
   const UserDemoDetails = async ({ params }: { params: { id: string } }) => {
     // Fetch user details based on the dynamic ID from the route
-    const response = await fetch(`https://jsonplaceholder.typicode.com/users/${params.id}`, {
-      cache: 'no-store', // Ensures fresh data for each request
-    });
+    const response = await fetch(`https://jsonplaceholder.typicode.com/users/${params.id}`);
   
     // Handle errors in case the user is not found
     if (!response.ok) {

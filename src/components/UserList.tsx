@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from 'react';
-
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
 interface User {
   id: number;
@@ -27,8 +27,6 @@ interface User {
   };
 }
 
-
-
 const UserList = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
@@ -37,9 +35,11 @@ const UserList = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch('https://jsonplaceholder.typicode.com/users');
+        const response = await fetch(
+          "https://jsonplaceholder.typicode.com/users"
+        );
         if (!response.ok) {
-          throw new Error('Failed to fetch users');
+          throw new Error("Failed to fetch users");
         }
         const data: User[] = await response.json();
         setUsers(data);
@@ -60,9 +60,10 @@ const UserList = () => {
     <div>
       <h2>User List ones</h2>
       <ul>
-        {users.map(user => (
+        {users.map((user) => (
           <li key={user.id}>
-            <strong>{user.name}</strong> - {user.email}
+            <strong>{user.name}</strong> - {user.email} -{" "}
+            <Link href={`/user-demo/test/${user.id}`}>{user.id}</Link>
           </li>
         ))}
       </ul>
