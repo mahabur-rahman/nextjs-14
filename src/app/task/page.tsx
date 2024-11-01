@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
 // GraphQL query to fetch all tasks
@@ -178,7 +179,7 @@ const Task = () => {
   return (
     <div>
       <h2 className="font-bold text-center text-4xl my-8">Task List</h2>
-      
+
       {/* Input for creating a new task */}
       <div className="mb-4">
         <input
@@ -195,7 +196,7 @@ const Task = () => {
           Create Task
         </button>
       </div>
-      
+
       <ul>
         {tasks.map((task) => (
           <li key={task.id} className="flex items-center my-2">
@@ -234,6 +235,12 @@ const Task = () => {
             >
               Delete
             </button>
+            <Link
+              href={`/task/${task.id}`}
+              className="ml-2 px-3 py-1 bg-slate-500 text-white rounded"
+            >
+              Get single task
+            </Link>
           </li>
         ))}
       </ul>
