@@ -12,6 +12,16 @@ const GET_ALL_TASKS = `
   }
 `;
 
+// GraphQL mutation to create a task
+const CREATE_TASK = `
+  mutation($createTaskDto: CreateTaskDto!) {
+    createTask(createTaskInput: $createTaskDto) {
+      id
+      title
+    }
+  }
+`;
+
 // Updated GraphQL mutation to update a task using the correct type
 const UPDATE_TASK = `
   mutation($id: String!, $updateTaskDto: UpdateTaskDto!) {
@@ -55,6 +65,7 @@ const Task = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [editTaskId, setEditTaskId] = useState<string | null>(null);
   const [newTitle, setNewTitle] = useState<string>("");
+  const [createTaskTitle, setCreateTaskTitle] = useState<string>("");
 
   // Fetch tasks when the component mounts
   useEffect(() => {
@@ -65,6 +76,41 @@ const Task = () => {
 
     loadTasks();
   }, []);
+
+  // Function to create a new task
+  const createTask = async (title: string) => {
+    try {
+      const response = await fetch("http://localhost:5000/graphql", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          query: CREATE_TASK,
+          variables: {
+            createTaskDto: { title }, // Use createTaskDto
+          },
+        }),
+      });
+
+      const { data, errors } = await response.json();
+
+      if (errors) {
+        console.error("GraphQL errors:", errors);
+        return; // Early return if there are errors
+      }
+
+      const newTask = data.createTask;
+
+      // Update the tasks state with the new task
+      setTasks((prevTasks) => [...prevTasks, newTask]);
+
+      // Reset create task input
+      setCreateTaskTitle("");
+    } catch (error) {
+      console.error("Error creating task:", error);
+    }
+  };
 
   // Function to update a task
   const updateTask = async (id: string, title: string) => {
@@ -78,13 +124,13 @@ const Task = () => {
           query: UPDATE_TASK,
           variables: {
             id,
-            updateTaskDto: { title } // Updated input structure to match the GraphQL schema
+            updateTaskDto: { title }, // Updated input structure to match the GraphQL schema
           },
         }),
       });
 
       const { data, errors } = await response.json();
-      
+
       // Handle any errors from the GraphQL response
       if (errors) {
         console.error("GraphQL errors:", errors);
@@ -132,6 +178,24 @@ const Task = () => {
   return (
     <div>
       <h2 className="font-bold text-center text-4xl my-8">Task List</h2>
+      
+      {/* Input for creating a new task */}
+      <div className="mb-4">
+        <input
+          type="text"
+          value={createTaskTitle}
+          onChange={(e) => setCreateTaskTitle(e.target.value)}
+          placeholder="New task title"
+          className="border px-2 py-1"
+        />
+        <button
+          onClick={() => createTask(createTaskTitle)}
+          className="ml-2 px-3 py-1 bg-blue-500 text-white rounded"
+        >
+          Create Task
+        </button>
+      </div>
+      
       <ul>
         {tasks.map((task) => (
           <li key={task.id} className="flex items-center my-2">
