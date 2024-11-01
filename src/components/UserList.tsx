@@ -58,7 +58,7 @@ const UserList = () => {
 
   return (
     <div>
-      <h2>User List</h2>
+      <h2>User List ones</h2>
       <ul>
         {users.map(user => (
           <li key={user.id}>
