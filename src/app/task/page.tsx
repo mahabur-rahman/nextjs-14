@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
-// Define the GraphQL queries and mutations as strings
+// GraphQL query to fetch all tasks
 const GET_ALL_TASKS = `
   query {
     getAllTasks {
@@ -12,9 +12,20 @@ const GET_ALL_TASKS = `
   }
 `;
 
-const CREATE_TASK = `
-  mutation($createTaskInput: CreateTaskDto!) {
-    createTask(createTaskInput: $createTaskInput) {
+// Updated GraphQL mutation to update a task using the correct type
+const UPDATE_TASK = `
+  mutation($id: String!, $updateTaskDto: UpdateTaskDto!) {
+    updateTask(id: $id, updateTaskInput: $updateTaskDto) {
+      id
+      title
+    }
+  }
+`;
+
+// GraphQL mutation to delete a task
+const DELETE_TASK = `
+  mutation($id: String!) {
+    deleteTask(id: $id) {
       id
       title
     }
@@ -42,65 +53,124 @@ async function fetchTasks() {
 
 const Task = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [title, setTitle] = useState("");
-
-  const fetchAndSetTasks = async () => {
-    const tasksData = await fetchTasks();
-    setTasks(tasksData);
-  };
+  const [editTaskId, setEditTaskId] = useState<string | null>(null);
+  const [newTitle, setNewTitle] = useState<string>("");
 
   // Fetch tasks when the component mounts
   useEffect(() => {
-    fetchAndSetTasks();
+    const loadTasks = async () => {
+      const tasks = await fetchTasks();
+      setTasks(tasks);
+    };
+
+    loadTasks();
   }, []);
 
-  const handleCreateTask = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    const response = await fetch("http://localhost:5000/graphql", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        query: CREATE_TASK,
-        variables: {
-          createTaskInput: { title }, // Create Task input object
+  // Function to update a task
+  const updateTask = async (id: string, title: string) => {
+    try {
+      const response = await fetch("http://localhost:5000/graphql", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      }),
-    });
+        body: JSON.stringify({
+          query: UPDATE_TASK,
+          variables: {
+            id,
+            updateTaskDto: { title } // Updated input structure to match the GraphQL schema
+          },
+        }),
+      });
 
-    const { data } = await response.json();
-    if (data.createTask) {
-      setTasks((prevTasks) => [...prevTasks, data.createTask]); // Add the new task to the list
-      setTitle(""); // Clear the input field
+      const { data, errors } = await response.json();
+      
+      // Handle any errors from the GraphQL response
+      if (errors) {
+        console.error("GraphQL errors:", errors);
+        return; // Early return if there are errors
+      }
+
+      // Destructure the updated task from the response
+      const updatedTask = data.updateTask;
+
+      // Update the tasks state
+      setTasks((prevTasks) =>
+        prevTasks.map((task) =>
+          task.id === updatedTask.id ? updatedTask : task
+        )
+      );
+
+      // Reset edit state
+      setEditTaskId(null);
+      setNewTitle("");
+    } catch (error) {
+      console.error("Error updating task:", error);
+    }
+  };
+
+  // Function to delete a task
+  const deleteTask = async (id: string) => {
+    try {
+      await fetch("http://localhost:5000/graphql", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          query: DELETE_TASK,
+          variables: { id },
+        }),
+      });
+
+      setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
+    } catch (error) {
+      console.error("Error deleting task:", error);
     }
   };
 
   return (
     <div>
       <h2 className="font-bold text-center text-4xl my-8">Task List</h2>
-
-      <form onSubmit={handleCreateTask} className="mb-4">
-        <input
-          type="text"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="Enter task title"
-          className="border rounded p-2"
-          required
-        />
-        <button
-          type="submit"
-          className="ml-2 bg-blue-500 text-white rounded p-2"
-        >
-          Create Task
-        </button>
-      </form>
-
       <ul>
-        {tasks.map((task: Task) => (
-          <li key={task.id}>{task.title}</li>
+        {tasks.map((task) => (
+          <li key={task.id} className="flex items-center my-2">
+            {editTaskId === task.id ? (
+              <input
+                type="text"
+                value={newTitle}
+                onChange={(e) => setNewTitle(e.target.value)}
+                placeholder="Edit title"
+                className="border px-2 py-1"
+              />
+            ) : (
+              <span>{task.title}</span>
+            )}
+            {editTaskId === task.id ? (
+              <button
+                onClick={() => updateTask(task.id, newTitle)}
+                className="ml-2 px-3 py-1 bg-green-500 text-white rounded"
+              >
+                Save
+              </button>
+            ) : (
+              <button
+                onClick={() => {
+                  setEditTaskId(task.id);
+                  setNewTitle(task.title);
+                }}
+                className="ml-2 px-3 py-1 bg-blue-500 text-white rounded"
+              >
+                Edit
+              </button>
+            )}
+            <button
+              onClick={() => deleteTask(task.id)}
+              className="ml-2 px-3 py-1 bg-red-500 text-white rounded"
+            >
+              Delete
+            </button>
+          </li>
         ))}
       </ul>
     </div>
