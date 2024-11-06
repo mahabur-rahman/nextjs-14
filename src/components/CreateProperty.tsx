@@ -96,8 +96,48 @@ const steps = [
     ),
   },
   {
-    label: "Project Overview and Visualizations",
-    description: "Add more details about the project in this step.",
+    label: "Project visualization",
+    description: (
+      <>
+        <TextField fullWidth label="Project Overview" required sx={{ mb: 2 }} />
+        <TextField
+          fullWidth
+          label="Project General Facts"
+          required
+          sx={{ mb: 2 }}
+        />
+        <TextField
+          fullWidth
+          label="Finishing and material"
+          required
+          sx={{ mb: 2 }}
+        />
+        <TextField
+          fullWidth
+          label="Kitchen and material"
+          required
+          sx={{ mb: 2 }}
+        />
+        <TextField fullWidth label="Furnishing" required sx={{ mb: 2 }} />
+        <TextField fullWidth label="Location desc" required sx={{ mb: 2 }} />
+
+        <Typography variant="subtitle1" sx={{ mt: 2 }}>
+          Exterior Images
+        </Typography>
+        <Button variant="contained" component="label" sx={{ mt: 1, mr: 1 }}>
+        Exterior Images
+          <input type="file" multiple />
+        </Button>
+
+        <Typography variant="subtitle1" sx={{ mt: 2 }}>
+          Interior Images
+        </Typography>
+        <Button variant="contained" component="label" sx={{ mt: 1, mr: 1 }}>
+        Interior Images
+          <input type="file" multiple />
+        </Button>
+      </>
+    ),
   },
   {
     label: "Location and Plans",
