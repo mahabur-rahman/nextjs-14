@@ -90,12 +90,14 @@ const Property = async () => {
       <Typography variant="h2" gutterBottom>
         Property Page
       </Typography>
+
       <Grid container spacing={4}>
         {properties.map((property: Property) => (
           <Grid item xs={12} sm={6} md={4} key={property.id}>
             <Card>
               <CardContent>
                 <Typography variant="h5" component="div">
+                <div className="bg-red-200 text-black p-2">Delete</div>
                   {property.projectName} ({property.projectTag})
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
