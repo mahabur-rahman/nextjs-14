@@ -7,7 +7,36 @@ import {
   CardContent,
 } from "@mui/material";
 
-const fetchProperties = async () => {
+// Define Property interface to match GraphQL data
+interface Property {
+  id: string;
+  projectName: string;
+  projectTag: string;
+  completionDate: {
+    quarter: number;
+    year: number;
+  };
+  projectStatus: string;
+  unitType: string;
+  floors: number;
+  furnishing: string;
+  serviceCharge: number;
+  readinessProgress: number;
+  currency: string;
+  sizeUnit: string;
+  country: string;
+  district: string;
+  city: string;
+  projectImages: string[];
+  projectGeneralFacts: string;
+  projectFinishingAndMaterials: string;
+  projectKitchenAndAppliances: string;
+  projectFurnishingDetails: string;
+  exteriorImages: string[];
+  interiorImages: string[];
+}
+
+const fetchProperties = async (): Promise<Property[]> => {
   const response = await fetch("http://localhost:8000/graphql", {
     method: "POST",
     headers: {
@@ -15,36 +44,36 @@ const fetchProperties = async () => {
     },
     body: JSON.stringify({
       query: `
-        query {
-          findAllProperties {
-            id
-            projectName
-            projectTag
-            completionDate {
-              quarter
-              year
+          query {
+            findAllProperties {
+              id
+              projectName
+              projectTag
+              completionDate {
+                quarter
+                year
+              }
+              projectStatus
+              unitType
+              floors
+              furnishing
+              serviceCharge
+              readinessProgress
+              currency
+              sizeUnit
+              country
+              district
+              city
+              projectImages
+              projectGeneralFacts
+              projectFinishingAndMaterials
+              projectKitchenAndAppliances
+              projectFurnishingDetails
+              exteriorImages
+              interiorImages
             }
-            projectStatus
-            unitType
-            floors
-            furnishing
-            serviceCharge
-            readinessProgress
-            currency
-            sizeUnit
-            country
-            district
-            city
-            projectImages
-            projectGeneralFacts
-            projectFinishingAndMaterials
-            projectKitchenAndAppliances
-            projectFurnishingDetails
-            exteriorImages
-            interiorImages
           }
-        }
-      `,
+        `,
     }),
     cache: "no-store",
   });
@@ -54,7 +83,7 @@ const fetchProperties = async () => {
 };
 
 const Property = async () => {
-  const properties = await fetchProperties();
+  const properties: Property[] = await fetchProperties();
 
   return (
     <Box sx={{ padding: 4 }}>
@@ -62,7 +91,7 @@ const Property = async () => {
         Property Page
       </Typography>
       <Grid container spacing={4}>
-        {properties.map((property) => (
+        {properties.map((property: Property) => (
           <Grid item xs={12} sm={6} md={4} key={property.id}>
             <Card>
               <CardContent>
