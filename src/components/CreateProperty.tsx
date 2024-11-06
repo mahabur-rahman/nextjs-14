@@ -24,14 +24,37 @@ const steps = [
           <MenuItem value="Tag 2">Tag 2</MenuItem>
           {/* Add more tags here */}
         </TextField>
-        <TextField fullWidth select label="Completion Date" required sx={{ mb: 2 }}>
-          <MenuItem value="Q1 2024">Q1 2024</MenuItem>
-          <MenuItem value="Q2 2024">Q2 2024</MenuItem>
-          {/* Add more options here */}
+        <TextField
+          fullWidth
+          select
+          label="Completion Quarter"
+          required
+          sx={{ mb: 2 }}
+        >
+          <MenuItem value="Q1">Q1</MenuItem>
+          <MenuItem value="Q2">Q2</MenuItem>
+          <MenuItem value="Q3">Q3</MenuItem>
+          <MenuItem value="Q4">Q4</MenuItem>
         </TextField>
-        <TextField fullWidth select label="Project Status" required sx={{ mb: 2 }}>
-          <MenuItem value="Active">Active</MenuItem>
-          <MenuItem value="Inactive">Inactive</MenuItem>
+
+        <TextField
+          fullWidth
+          type="number"
+          label="Completion Year"
+          required
+          sx={{ mb: 2 }}
+          InputProps={{ inputProps: { min: 2024, max: 2100 } }} // Adjust year range as needed
+        />
+        <TextField
+          fullWidth
+          select
+          label="Project Status"
+          required
+          sx={{ mb: 2 }}
+        >
+          <MenuItem value="CONSTRUCTION">CONSTRUCTION</MenuItem>
+          <MenuItem value="COMPLETED">COMPLETED</MenuItem>
+          <MenuItem value="PLANNED">PLANNED</MenuItem>
           {/* Add more statuses here */}
         </TextField>
         <TextField fullWidth select label="Unit Type" required sx={{ mb: 2 }}>
@@ -42,7 +65,12 @@ const steps = [
         <TextField fullWidth label="Floors" required sx={{ mb: 2 }} />
         <TextField fullWidth label="Furnishing" required sx={{ mb: 2 }} />
         <TextField fullWidth label="Service Charge" required sx={{ mb: 2 }} />
-        <TextField fullWidth label="Readiness Progress" required sx={{ mb: 2 }} />
+        <TextField
+          fullWidth
+          label="Readiness Progress"
+          required
+          sx={{ mb: 2 }}
+        />
         <TextField fullWidth select label="Currency" required sx={{ mb: 2 }}>
           <MenuItem value="USD">USD</MenuItem>
           <MenuItem value="AED">AED</MenuItem>
@@ -57,18 +85,12 @@ const steps = [
         <TextField fullWidth label="Country" required sx={{ mb: 2 }} />
         <TextField fullWidth label="District" required sx={{ mb: 2 }} />
         <TextField fullWidth label="City" required sx={{ mb: 2 }} />
-        <Typography variant="subtitle1" sx={{ mt: 2 }}>Project Images</Typography>
+        <Typography variant="subtitle1" sx={{ mt: 2 }}>
+          Project Images
+        </Typography>
         <Button variant="contained" component="label" sx={{ mt: 1, mr: 1 }}>
           Upload Image 1
-          <input type="file" hidden />
-        </Button>
-        <Button variant="contained" component="label" sx={{ mt: 1, mr: 1 }}>
-          Upload Image 2
-          <input type="file" hidden />
-        </Button>
-        <Button variant="contained" component="label" sx={{ mt: 1, mr: 1 }}>
-          Upload Image 3
-          <input type="file" hidden />
+          <input type="file" multiple />
         </Button>
       </>
     ),
@@ -136,7 +158,7 @@ export default function CreatePropertyStep() {
       </Stepper>
       {activeStep === steps.length && (
         <Paper square elevation={0} sx={{ p: 3 }}>
-          <Typography>All steps completed - you're finished</Typography>
+          <Typography>All steps completed - you are finished</Typography>
           <Button onClick={handleReset} sx={{ mt: 1, mr: 1 }}>
             Reset
           </Button>
