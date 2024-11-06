@@ -108,6 +108,9 @@ export default function CreatePropertyStep() {
     }));
   };
 
+
+  console.log('Form data wil be : ', formData)
+
   return (
     <Box sx={{ maxWidth: 600 }}>
       <Stepper activeStep={activeStep} orientation="vertical">
@@ -367,11 +370,11 @@ export default function CreatePropertyStep() {
               <Box sx={{ mt: 2 }}>
                 <Button
                   variant="contained"
-                  color="primary"
+                  color="secondary"
                   onClick={handleNext}
                   sx={{ mr: 1 }}
                 >
-                  Next
+                  Finish
                 </Button>
                 <Button
                   variant="outlined"
