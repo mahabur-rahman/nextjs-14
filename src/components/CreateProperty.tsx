@@ -10,16 +10,21 @@ import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import { useState } from "react";
+import { CREATE_PROPERTY_MUTATION } from "@/graphql/mutations/mutation";
+import { useMutation } from "@apollo/client";
 
 // Define your steps and their descriptions
 const steps = [
   { label: "Basic Information" },
-  { label: "Project Visualization" },
-  { label: "Location and Plans" },
+  { label: "Project Visualization" }
 ];
+
+
 
 export default function CreatePropertyStep() {
   const [activeStep, setActiveStep] = useState(0);
+  const [createProperty, { loading, error }] = useMutation(CREATE_PROPERTY_MUTATION);
+
 
   // Define the state object to store form data
   const [formData, setFormData] = useState({
@@ -49,6 +54,9 @@ export default function CreatePropertyStep() {
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
+
+
+  
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
@@ -109,7 +117,18 @@ export default function CreatePropertyStep() {
   };
 
 
-  console.log('Form data wil be : ', formData)
+  // console.log('Form data wil be : ', formData)
+
+  const handleCreateProperty = async () => {
+    try {
+      const { data } = await createProperty({ variables: { createPropertyInput: formData } });
+      console.log('Property created:', data);
+      // Optionally reset the form or provide feedback to the user here
+    } catch (err) {
+      console.error('Error creating property:', err);
+    }
+  };
+  
 
   return (
     <Box sx={{ maxWidth: 600 }}>
@@ -119,7 +138,12 @@ export default function CreatePropertyStep() {
             <StepLabel
               optional={
                 index === steps.length - 1 ? (
+                  <>
                   <Typography variant="caption">Last step</Typography>
+                  <br />
+                  <Button onClick={handleCreateProperty}>Create Property</Button>
+                  
+                  </>
                 ) : null
               }
             >
@@ -374,7 +398,7 @@ export default function CreatePropertyStep() {
                   onClick={handleNext}
                   sx={{ mr: 1 }}
                 >
-                  Finish
+                  Continue
                 </Button>
                 <Button
                   variant="outlined"
